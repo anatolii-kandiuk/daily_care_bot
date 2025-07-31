@@ -1,0 +1,14 @@
+{
+  "start_choose_language": "👋 Welcome! Please choose a language:",
+  "main_menu": "🧭 Main Menu",
+  "menu_todo": "📝 My Tasks",
+  "menu_weather": "🌤 Weather",
+  "menu_settings": "⚙ Settings",
+  "settings_language": "🌐 Change Language",
+  "settings_region": "🏙 Change Weather Region",
+  "back": "🔙 Back",
+  "language_saved": "✅ Language saved!",
+  "region_prompt": "Please enter your city for weather forecast:",
+  "region_saved": "✅ Region saved!",
+  "error_unknown": "⚠ Something went wrong. Please try again later."
+}
