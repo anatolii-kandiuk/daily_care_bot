@@ -5,6 +5,7 @@ from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.enums import ParseMode
 from handlers import main_menu, todo, weather, gpt_assistant
+from utils.scheduler import Scheduler
 from dotenv import load_dotenv
 import os
 
@@ -27,6 +28,10 @@ dp.include_routers(
 async def main():
     logging.basicConfig(level=logging.INFO)
     print("Бот запущено.")
+    
+    scheduler = Scheduler(bot)
+    asyncio.create_task(scheduler.start())
+    
     await dp.start_polling(bot)
 
 if __name__ == "__main__":

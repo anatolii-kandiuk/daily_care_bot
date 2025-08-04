@@ -1,51 +1,67 @@
 import sqlite3
-from pathlib import Path
-
-DB_PATH = Path("data/users.db")
+from datetime import datetime
 
 class TodoManager:
-    def __init__(self):
-        self.conn = sqlite3.connect(DB_PATH)
+    def __init__(self, db_name="todo.db"):
+        self.conn = sqlite3.connect(db_name, check_same_thread=False)
         self._create_table()
 
     def _create_table(self):
         with self.conn:
-            self.conn.execute("""
+            self.conn.execute('''
                 CREATE TABLE IF NOT EXISTS todos (
                     user_id INTEGER,
                     task TEXT,
-                    is_done INTEGER DEFAULT 0
+                    is_done INTEGER DEFAULT 0,
+                    date TEXT,
+                    created_at TEXT,
+                    completed_at TEXT
                 )
-            """)
+            ''')
 
-    def add_task(self, user_id, task):
+    def add_task(self, user_id, task, date):
+        created_at = datetime.now().isoformat()
         with self.conn:
-            self.conn.execute(
-                "INSERT INTO todos (user_id, task, is_done) VALUES (?, ?, 0)",
-                (user_id, task)
-            )
+            self.conn.execute("""
+                INSERT INTO todos (user_id, task, is_done, date, created_at)
+                VALUES (?, ?, 0, ?, ?)
+            """, (user_id, task, date, created_at))
 
-    def get_tasks(self, user_id):
+    def get_dates(self, user_id):
+        cursor = self.conn.execute("""
+            SELECT DISTINCT date FROM todos WHERE user_id=? ORDER BY date
+        """, (user_id,))
+        return [row[0] for row in cursor.fetchall()]
+
+    def get_tasks(self, user_id, date):
+        cursor = self.conn.execute("""
+            SELECT task, is_done FROM todos WHERE user_id=? AND date=?
+        """, (user_id, date))
+        return cursor.fetchall()
+
+    def delete_task(self, user_id, date, index):
+        tasks = self.get_tasks(user_id, date)
+        if 0 <= index < len(tasks):
+            task_text = tasks[index][0]
+            with self.conn:
+                self.conn.execute("""
+                    DELETE FROM todos WHERE user_id=? AND date=? AND task=?
+                """, (user_id, date, task_text))
+
+    def mark_done(self, user_id, date, index):
+        tasks = self.get_tasks(user_id, date)
+        if 0 <= index < len(tasks):
+            task_text = tasks[index][0]
+            completed_at = datetime.now().isoformat()
+            with self.conn:
+                self.conn.execute("""
+                    UPDATE todos
+                    SET is_done=1, completed_at=?
+                    WHERE user_id=? AND date=? AND task=?
+                """, (completed_at, user_id, date, task_text))
+    
+    def get_all_users_with_tasks(self, date_str):
         cur = self.conn.cursor()
-        cur.execute("SELECT task, is_done FROM todos WHERE user_id = ?", (user_id,))
-        return cur.fetchall()
-
-    def delete_task(self, user_id, index):
-        tasks = self.get_tasks(user_id)
-        if 0 <= index < len(tasks):
-            task_to_delete = tasks[index][0]
-            with self.conn:
-                self.conn.execute(
-                    "DELETE FROM todos WHERE user_id = ? AND task = ? LIMIT 1",
-                    (user_id, task_to_delete)
-                )
-
-    def mark_done(self, user_id, index):
-        tasks = self.get_tasks(user_id)
-        if 0 <= index < len(tasks):
-            task_to_mark = tasks[index][0]
-            with self.conn:
-                self.conn.execute(
-                    "UPDATE todos SET is_done = 1 WHERE user_id = ? AND task = ?",
-                    (user_id, task_to_mark)
-                )
+        cur.execute("SELECT DISTINCT user_id FROM todos WHERE date = ?", (date_str,))
+        rows = cur.fetchall()
+        return [row[0] for row in rows]
