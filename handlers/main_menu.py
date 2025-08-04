@@ -1,65 +1,35 @@
-from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
-from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram import Router, types
+from aiogram.filters import CommandStart
+from aiogram.utils.keyboard import InlineKeyboardBuilder
 
 router = Router()
 
-# Кнопки головного меню
-def get_main_menu():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📋 Плани", callback_data="menu_plans")],
-        [InlineKeyboardButton(text="🌤 Погода", callback_data="menu_weather")],
-        [InlineKeyboardButton(text="⚙️ Налаштування", callback_data="menu_settings")]
-    ])
-    return keyboard
+@router.message(CommandStart())
+async def send_welcome(message: types.Message):
+    builder = InlineKeyboardBuilder()
+    builder.button(text="📋 Список завдань", callback_data="menu_todo")
+    builder.button(text="☀️ Погода", callback_data="menu_weather")
+    builder.button(text="🧠 Консультація GPT", callback_data="menu_gpt")
+    builder.button(text="* Налаштування", callback_data="settings")
+    builder.adjust(1)
 
-# Підменю "Плани"
-def get_plans_menu():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🔹 Поточний план", callback_data="plans_show")],
-        [InlineKeyboardButton(text="➕ Додати пункт", callback_data="plans_add")],
-        [InlineKeyboardButton(text="📅 План на завтра", callback_data="plans_tomorrow")],
-        [InlineKeyboardButton(text="✏️ Редагувати", callback_data="plans_edit")],
-        [InlineKeyboardButton(text="🔙 Назад", callback_data="go_back_main")]
-    ])
-    return keyboard
+    await message.answer(
+        text="👋 Вітаю! Обери дію з меню нижче:",
+        reply_markup=builder.as_markup()
+    )
 
-# Підменю "Погода"
-def get_weather_menu():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="📍 Поточна погода", callback_data="weather_current")],
-        [InlineKeyboardButton(text="🌍 Змінити регіон", callback_data="weather_change")],
-        [InlineKeyboardButton(text="🔙 Назад", callback_data="go_back_main")]
-    ])
-    return keyboard
+@router.callback_query(lambda c: c.data.startswith("menu_"))
+async def handle_menu_selection(callback: types.CallbackQuery):
+    if callback.data == "menu_todo":
+        from handlers.todo import show_todo_menu
+        await show_todo_menu(callback)
+    elif callback.data == "menu_weather":
+        await callback.message.answer("☀️ Обрано: погода")
+    elif callback.data == "menu_gpt":
+        await callback.message.answer("🧠 Обрано: GPT-консультація")
+    elif callback.data == "settings":
+        await callback.message.answer("* Обрано: Налаштування")
+    else:
+        await callback.message.answer("❌ Невідомий пункт меню")
 
-# Підменю "Налаштування"
-def get_settings_menu():
-    keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🌐 Вибір мови", callback_data="settings_language")],
-        [InlineKeyboardButton(text="🔙 Назад", callback_data="go_back_main")]
-    ])
-    return keyboard
-
-# Привітання
-@router.message(F.text, F.text.lower().in_(["start", "/start", "привіт"]))
-async def cmd_start(message: Message):
-    await message.answer("👋 Вітаю! Оберіть пункт меню:", reply_markup=get_main_menu())
-
-# Обробники натискань на кнопки
-@router.callback_query(F.data == "menu_plans")
-async def show_plans_menu(callback: CallbackQuery):
-    await callback.message.edit_text("📋 Плани:", reply_markup=get_plans_menu())
-
-@router.callback_query(F.data == "menu_weather")
-async def show_weather_menu(callback: CallbackQuery):
-    await callback.message.edit_text("🌤 Погода:", reply_markup=get_weather_menu())
-
-@router.callback_query(F.data == "menu_settings")
-async def show_settings_menu(callback: CallbackQuery):
-    await callback.message.edit_text("⚙️ Налаштування:", reply_markup=get_settings_menu())
-
-# Назад у головне меню
-@router.callback_query(F.data == "go_back_main")
-async def go_back_main(callback: CallbackQuery):
-    await callback.message.edit_text("⬅️ Назад до головного меню:", reply_markup=get_main_menu())
+    await callback.answer()
