@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 
 class TodoManager:
-    def __init__(self, db_name="todo.db"):
+    def __init__(self, db_name="data/todo.db"):
         self.conn = sqlite3.connect(db_name, check_same_thread=False)
         self._create_table()
 

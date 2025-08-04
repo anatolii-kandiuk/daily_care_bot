@@ -15,6 +15,7 @@ class Scheduler:
         self.running = True
         while self.running:
             now = datetime.now()
+            # Розрахунок часу до наступного пуску - 06:00 або 12:00
             next_run = self._next_run_time(now)
             wait_seconds = (next_run - now).total_seconds()
             await asyncio.sleep(wait_seconds)
@@ -28,6 +29,7 @@ class Scheduler:
         elif now < today_12:
             return today_12
         else:
+            # Наступний день 6:00 ранку
             return (now + timedelta(days=1)).replace(hour=6, minute=0, second=0, microsecond=0)
 
     async def send_reminders(self, date):
