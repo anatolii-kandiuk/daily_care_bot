@@ -1,14 +1,37 @@
 {
-  "start_choose_language": "👋 Welcome! Please choose a language:",
-  "main_menu": "🧭 Main Menu",
-  "menu_todo": "📝 My Tasks",
-  "menu_weather": "🌤 Weather",
-  "menu_settings": "⚙ Settings",
-  "settings_language": "🌐 Change Language",
-  "settings_region": "🏙 Change Weather Region",
-  "back": "🔙 Back",
-  "language_saved": "✅ Language saved!",
-  "region_prompt": "Please enter your city for weather forecast:",
-  "region_saved": "✅ Region saved!",
-  "error_unknown": "⚠ Something went wrong. Please try again later."
+  "welcome": "👋 Hello! Choose an action from the menu below:",
+  "menu": {
+    "todo": "📋 To-do List",
+    "weather": "☀️ Weather",
+    "gpt": "🧠 GPT Consultation",
+    "settings": "⚙️ Settings"
+  },
+  "settings_menu": {
+    "choose_language": "🌐 Choose a language:"
+  },
+  "language_changed": "Language switched to {language}.",
+
+  "todo_menu": "📝 Task Menu:",
+  "add_task": "➕ Add Task",
+  "view_tasks": "📋 View Tasks",
+  "mark_done": "✅ Mark as Done",
+  "delete_task": "❌ Delete Task",
+  "back_to_menu": "🔙 Back to Menu",
+  "enter_task_text": "✏️ Enter the new task text:",
+  "no_tasks": "✅ You don't have any tasks yet.",
+  "choose_date": "📅 Choose a date:",
+  "choose_delete_date": "📅 Choose a date to delete a task:",
+  "choose_done_date": "📅 Choose a date to mark a task:",
+  "choose_custom_date": "📅 Enter your own date (YYYY-MM-DD)",
+  "choose_task_date": "📅 Choose a date for the task:",
+  "enter_custom_date": "✏️ Enter the date in format YYYY-MM-DD:",
+  "invalid_date": "⚠️ Invalid date. Please try again.",
+  "task_added": "✅ Task added.",
+  "tasks_on_date": "📋 Tasks for {date}:\n{tasks}",
+  "no_tasks_on_date": "❌ No tasks for this date.",
+  "choose_task_to_delete": "🗑 Choose a task to delete:\n{tasks}\n✏️ Enter the task number:",
+  "task_deleted": "🗑 Task deleted.",
+  "choose_task_to_mark": "☑️ Choose a task to mark as done:\n{tasks}\n✏️ Enter the task number:",
+  "task_marked_done": "✅ Task marked as done.",
+  "invalid_number": "⚠️ Enter a valid number."
 }
