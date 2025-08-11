@@ -78,8 +78,8 @@ async def handle_menu_selection(message: types.Message):
         from handlers.todo import show_todo_menu
         await show_todo_menu(message)
     elif text == t["menu"]["weather"]:
-        from handlers.weather import weather_menu
-        await weather_menu(message)
+        from handlers.weather import show_weather_menu
+        await show_weather_menu(message)
     elif text == t["menu"]["gpt"]:
         await message.answer(t["menu"]["gpt"] + (" обрано" if get_user_language(user_id) == "uk" else " selected"))
     elif text == t["menu"]["settings"]:
