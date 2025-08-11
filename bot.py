@@ -20,8 +20,8 @@ dp = Dispatcher(storage=MemoryStorage())
 
 dp.include_routers(
     main_menu.router,
-    todo.router,
     weather.router,
+    todo.router,
     gpt_assistant.router,
 )
 

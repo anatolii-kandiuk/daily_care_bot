@@ -77,13 +77,17 @@ async def handle_menu_selection(message: types.Message):
     if text == t["menu"]["todo"]:
         from handlers.todo import show_todo_menu
         await show_todo_menu(message)
+        return
     elif text == t["menu"]["weather"]:
         from handlers.weather import show_weather_menu
         await show_weather_menu(message)
+        return
     elif text == t["menu"]["gpt"]:
         await message.answer(t["menu"]["gpt"] + (" обрано" if get_user_language(user_id) == "uk" else " selected"))
+        return
     elif text == t["menu"]["settings"]:
         await message.answer(t["settings_menu"]["choose_language"], reply_markup=get_settings_menu(user_id))
+        return
 
 @router.message(F.text.in_([
     "🇺🇦 Українська",
