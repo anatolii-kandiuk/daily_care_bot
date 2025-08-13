@@ -8,7 +8,7 @@ from services.user_settings import get_user_city
 todo_manager = TodoManager()
 
 class Scheduler:
-    def __init__(self, bot: Bot):
+    def __init__(self, bot):
         self.bot = bot
         self.task = None
         self.running = False
@@ -22,7 +22,7 @@ class Scheduler:
             await asyncio.sleep(wait_seconds)
             await self.send_reminders(next_run)
 
-    def _next_run_time(self, now: datetime) -> datetime:
+    def _next_run_time(self, now):
         today_6 = now.replace(hour=6, minute=0, second=0, microsecond=0)
         today_12 = now.replace(hour=12, minute=0, second=0, microsecond=0)
         if now < today_6:
@@ -32,7 +32,7 @@ class Scheduler:
         else:
             return (now + timedelta(days=1)).replace(hour=6, minute=0, second=0, microsecond=0)
 
-    async def send_reminders(self, run_time: datetime):
+    async def send_reminders(self, run_time):
         users = todo_manager.get_all_users_with_tasks(run_time.date())
 
         for user_id in users:
