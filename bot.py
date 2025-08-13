@@ -4,7 +4,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.enums import ParseMode
-from handlers import main_menu, todo, weather, gpt_assistant
+from handlers import main_menu, todo, weather
 from utils.scheduler import Scheduler
 from dotenv import load_dotenv
 import os
@@ -20,9 +20,8 @@ dp = Dispatcher(storage=MemoryStorage())
 
 dp.include_routers(
     main_menu.router,
-    weather.router,
     todo.router,
-    gpt_assistant.router,
+    weather.router
 )
 
 async def main():

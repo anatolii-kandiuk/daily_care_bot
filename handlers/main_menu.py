@@ -28,7 +28,6 @@ def get_main_menu(user_id):
         keyboard=[
             [KeyboardButton(text=t["todo"])],
             [KeyboardButton(text=t["weather"])],
-            [KeyboardButton(text=t["gpt"])],
             [KeyboardButton(text=t["settings"])]
         ],
         resize_keyboard=True
@@ -62,11 +61,9 @@ async def send_welcome(message: types.Message):
 @router.message(F.text.in_([
     translations["uk"]["menu"]["todo"],
     translations["uk"]["menu"]["weather"],
-    translations["uk"]["menu"]["gpt"],
     translations["uk"]["menu"]["settings"],
     translations["en"]["menu"]["todo"],
     translations["en"]["menu"]["weather"],
-    translations["en"]["menu"]["gpt"],
     translations["en"]["menu"]["settings"],
 ]))
 async def handle_menu_selection(message: types.Message):
@@ -81,9 +78,6 @@ async def handle_menu_selection(message: types.Message):
     elif text == t["menu"]["weather"]:
         from handlers.weather import show_weather_menu
         await show_weather_menu(message)
-        return
-    elif text == t["menu"]["gpt"]:
-        await message.answer(t["menu"]["gpt"] + (" обрано" if get_user_language(user_id) == "uk" else " selected"))
         return
     elif text == t["menu"]["settings"]:
         await message.answer(t["settings_menu"]["choose_language"], reply_markup=get_settings_menu(user_id))
