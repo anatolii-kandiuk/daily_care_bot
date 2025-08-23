@@ -1,7 +1,5 @@
 from aiogram import Router, types, F
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
-from aiogram import Router, types, F
-from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from services.weather_api import fetch_weather_today, fetch_weather_forecast
 from datetime import datetime, timedelta
 from handlers.main_menu import send_welcome

@@ -1,6 +1,5 @@
 import asyncio
 from datetime import datetime, timedelta
-from aiogram import Bot
 from services.todo_manager import TodoManager
 from services.weather_api import fetch_weather_today
 from services.user_settings import get_user_city
